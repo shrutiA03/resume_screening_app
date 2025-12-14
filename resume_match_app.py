@@ -8,13 +8,6 @@ Created on Sun Apr 13 21:08:53 2025
 import re
 import streamlit as st
 import spacy
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    # If the model is not found, download it programmatically
-    from spacy.cli import download
-    download("en_core_web_sm")
-    nlp = spacy.load("en_core_web_sm")
 from spacy.matcher import Matcher
 from pdfminer.high_level import extract_text
 from sentence_transformers import SentenceTransformer, util
@@ -26,15 +19,23 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
 
-
 # Download NLTK data
 nltk.download('punkt')
 nltk.download('stopwords')
 
-# Initialize spaCy and sentence transformer
-nlp = spacy.load('en_core_web_sm')
+# Initialize spaCy safely
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    from spacy.cli import download
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
+# Initialize sentence transformer
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
 stop_words = set(stopwords.words('english'))
+
+# ================== Helper Functions ==================
 
 def extract_text_from_pdf(pdf_file):
     """Extract text from an uploaded PDF file."""
@@ -208,7 +209,8 @@ def create_dashboard(resume_skills, jd_skills, ats_score, gap_analysis):
     with col2:
         st.write("Missing Skills", gap_analysis["missing_skills"])
 
-# Streamlit App
+# ================== Streamlit App ==================
+
 def main():
     st.title("Resume Parser and Job Match Analyzer")
     
@@ -268,8 +270,6 @@ def main():
         
         # Dashboard
         create_dashboard(resume_skills, jd_analysis["skills"], ats_score, gap_analysis)
+
 if __name__ == "__main__":
-
     main()
-
-
