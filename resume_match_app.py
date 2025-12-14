@@ -8,6 +8,13 @@ Created on Sun Apr 13 21:08:53 2025
 import re
 import streamlit as st
 import spacy
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    # If the model is not found, download it programmatically
+    from spacy.cli import download
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 from spacy.matcher import Matcher
 from pdfminer.high_level import extract_text
 from sentence_transformers import SentenceTransformer, util
@@ -18,7 +25,7 @@ from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
-import spacy
+
 
 # Download NLTK data
 nltk.download('punkt')
@@ -264,4 +271,5 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
