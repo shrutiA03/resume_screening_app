@@ -18,6 +18,15 @@ from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
+import spacy
+
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    from spacy.cli import download
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
 
 # Download NLTK data
 nltk.download('punkt')
@@ -261,4 +270,5 @@ def main():
         # Dashboard
         create_dashboard(resume_skills, jd_analysis["skills"], ats_score, gap_analysis)
 if __name__ == "__main__":
+
     main()
