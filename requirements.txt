@@ -1,0 +1,8 @@
+streamlit
+spacy
+sentence-transformers
+pdfminer.six
+nltk
+pandas
+matplotlib
+seaborn
